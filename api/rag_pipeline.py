@@ -1,13 +1,14 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain_community.document_loaders import TextLoader
 from langchain_community.document_loaders import DirectoryLoader
 from langchain.prompts import PromptTemplate
 from langchain.schema import StrOutputParser
 from langchain.schema.runnable import RunnablePassthrough
+from chromadb import PersistentClient
 
 import os
 import json
@@ -42,7 +43,8 @@ DATA_PATH = config.get('data_path', "./data")
 embeddings = HuggingFaceEmbeddings(model_name=MODEL_NAME)
 #Load chroma vector db
 persist_directory = PERSIST_DIRECTORY
-vectordb = Chroma(persist_directory=persist_directory, embedding_function=embeddings)
+client = PersistentClient(path=persist_directory)
+vectordb = Chroma(client=client, embedding_function=embeddings)
 #Load OpenAI LLM
 llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model_name=MODEL_LLM, temperature=TEMPERATURE, max_tokens=MAX_TOKENS)
 #Text Splitter

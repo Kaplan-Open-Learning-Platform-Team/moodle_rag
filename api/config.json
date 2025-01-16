@@ -1,0 +1,13 @@
+{
+  "embedding_model_name": "all-mpnet-base-v2",
+  "vector_database_path": "./chroma_db",
+  "openai_api_key": "YOUR_OPENAI_API_KEY",
+  "collection_name": "moodle_course_content",
+  "temperature": 0.2,
+  "max_tokens": 150,
+  "llm_model_name": "gpt-3.5-turbo",
+  "chunk_size": 1000,
+  "chunk_overlap": 200,
+  "data_path": "./data",
+  "api_key": "YOUR_API_KEY"
+}
