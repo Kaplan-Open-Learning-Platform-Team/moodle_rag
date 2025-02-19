@@ -1,4 +1,3 @@
-import getpass
 import json
 import os
 
@@ -15,6 +14,9 @@ load_dotenv()
 
 os.environ["GOOGLE_API_KEY"]
 os.environ["LANGSMITH_API_KEY"]
+os.environ["TOKENIZERS_PARALLELISM"] = "true"
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_PROJECT"] = "moodle-rag"
 
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.0-flash-001",
@@ -22,15 +24,11 @@ llm = ChatGoogleGenerativeAI(
     max_tokens=None,
     timeout=None,
     max_retries=2,
-    convert_system_message_to_human=True,
     # other params...
 )
 
-llm_json_mode = ChatGoogleGenerativeAI(model="gemini-2.0-flash-001", temperature=0,output_parser="json_object")
+llm_json_mode = ChatGoogleGenerativeAI(model="gemini-2.0-flash-001", temperature=0)
 
-os.environ["TOKENIZERS_PARALLELISM"] = "true"
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_PROJECT"] = "moodle-rag"
 
 # Vector Store
 #urls = [
@@ -97,7 +95,7 @@ print(test_vector_store)
 print(
 #    json.loads(test_web_search.content),
 #    json.loads(test_web_search_2.content),
-    json.loads(test_vector_store.content),
+#    json.loads(test_vector_store.content),
 )
 
 # Retrieval Grader
@@ -256,7 +254,7 @@ class GraphState(TypedDict):
 
     question: str  # User question
     generation: str  # LLM generation
-    web_search: str  # Binary decision to run web search
+#    web_search: str  # Binary decision to run web search
     max_retries: int  # Max number of retries for answer generation
     answers: int  # Number of answers generated
     loop_step: Annotated[int, operator.add]
