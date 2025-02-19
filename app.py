@@ -2,6 +2,7 @@ import getpass
 import json
 import os
 
+from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
@@ -10,8 +11,10 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_nomic.embeddings import NomicEmbeddings
 
-if "GOOGLE_API_KEY" not in os.environ:
-    os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter your Google AI API key: ")
+load_dotenv()
+
+os.environ["GOOGLE_API_KEY"]
+os.environ["LANGSMITH_API_KEY"]
 
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.0-flash-001",
@@ -19,36 +22,39 @@ llm = ChatGoogleGenerativeAI(
     max_tokens=None,
     timeout=None,
     max_retries=2,
+    convert_system_message_to_human=True,
     # other params...
 )
 
-llm_json_mode = ChatGoogleGenerativeAI(model="gemini-2.0-flash-001", temperature=0, format="json")
+llm_json_mode = ChatGoogleGenerativeAI(model="gemini-2.0-flash-001", temperature=0,output_parser="json_object")
 
-def _set_env(var: str):
-    if not os.environ.get(var):
-        os.environ[var] = getpass.getpass(f"{var}: ")
-        
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
-_set_env("LANGSMITH_API_KEY")
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_PROJECT"] = "moodle-rag"
 
 # Vector Store
-urls = [
-    "https://lilianweng.github.io/posts/2023-06-23-agent/",
-    "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/",
-    "https://lilianweng.github.io/posts/2023-10-25-adv-attack-llm/",
-]
+#urls = [
+#    "https://lilianweng.github.io/posts/2023-06-23-agent/",
+#    "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/",
+#    "https://lilianweng.github.io/posts/2023-10-25-adv-attack-llm/",
+#]
 
 ## Load documents
-docs = [WebBaseLoader(url).load() for url in urls]
-docs_list = [item for sublist in docs for item in sublist]
+#docs = [WebBaseLoader(url).load() for url in urls]
+#docs_list = [item for sublist in docs for item in sublist]
 
+## Split documents
+#text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+#    chunk_size=1000, chunk_overlap=200
+#)
+#doc_splits = text_splitter.split_documents(docs_list)
+
+text = "This is my hardcoded text for the vector store. It should be added to the database."
 ## Split documents
 text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
     chunk_size=1000, chunk_overlap=200
 )
-doc_splits = text_splitter.split_documents(docs_list)
+doc_splits = text_splitter.create_documents([text]) # Use create_documents
 
 ## Add to vectorDB
 vectorstore = SKLearnVectorStore.from_documents(
@@ -71,25 +77,26 @@ Use the vectorstore for questions on these topics. For all else, and especially 
 Return JSON with single key, datasource, that is 'websearch' or 'vectorstore' depending on the question."""
 
 ## Test router
-test_web_search = llm_json_mode.invoke(
-    [SystemMessage(content=router_instructions)]
-    + [
-        HumanMessage(
-            content="Who is favored to win the NFC Championship game in the 2024 season?"
-        )
-    ]
-)
-test_web_search_2 = llm_json_mode.invoke(
-    [SystemMessage(content=router_instructions)]
-    + [HumanMessage(content="What are the models released today for llama3.2?")]
-)
+#test_web_search = llm_json_mode.invoke(
+#    [SystemMessage(content=router_instructions)]
+#    + [
+#        HumanMessage(
+#            content="Who is favored to win the NFC Championship game in the 2024 season?"
+#        )
+#    ]
+#)
+#test_web_search_2 = llm_json_mode.invoke(
+#    [SystemMessage(content=router_instructions)]
+#    + [HumanMessage(content="What are the models released today for llama3.2?")]
+#)
 test_vector_store = llm_json_mode.invoke(
     [SystemMessage(content=router_instructions)]
     + [HumanMessage(content="What are the types of agent memory?")]
 )
+print(test_vector_store)
 print(
-    json.loads(test_web_search.content),
-    json.loads(test_web_search_2.content),
+#    json.loads(test_web_search.content),
+#    json.loads(test_web_search_2.content),
     json.loads(test_vector_store.content),
 )
 
