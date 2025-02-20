@@ -272,14 +272,6 @@ workflow.add_edge("rewrite", "agent")
 # Compile
 graph = workflow.compile()
 
-from IPython.display import Image, display
-
-try:
-    display(Image(graph.get_graph(xray=True).draw_mermaid_png()))
-except Exception:
-    # This requires some extra dependencies and is optional
-    pass
-
 # Inputs 
 
 import pprint
