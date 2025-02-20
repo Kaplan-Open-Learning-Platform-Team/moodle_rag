@@ -273,6 +273,55 @@ workflow.add_edge("rewrite", "agent")
 graph = workflow.compile()
 
 # Inputs 
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+
+@app.route("/chat", methods=["POST"])
+def chat():
+    """
+    Endpoint to receive user messages and return the agent's response.
+    """
+    try:
+        data = request.get_json()
+        user_message = data.get("message")
+
+        if not user_message:
+            return jsonify({"error": "No message provided"}), 400
+
+        inputs = {
+            "messages": [
+                ("user", user_message),
+            ]
+        }
+
+        full_response = ""
+        for output in graph.stream(inputs):
+            # Accumulate the response from each node
+            for key, value in output.items():
+                # This is a simplified handling of the response.  You might want to
+                # format it better based on the node that generated it.
+                if isinstance(value, dict) and "messages" in value:
+                    messages = value["messages"]
+                    if messages:
+                        # We want to show the response from the Agent
+                        last_message = messages[-1]
+                        if isinstance(last_message, str): # If agent returns just a string
+                            full_response += last_message
+                        else: # If agent returns an actual message object
+                            full_response += last_message.content
+
+
+        return jsonify({"response": full_response})
+
+    except Exception as e:
+        print(f"Error processing request: {e}")  # Log the error for debugging
+        return jsonify({"error": str(e)}), 500
+
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 import pprint
 
