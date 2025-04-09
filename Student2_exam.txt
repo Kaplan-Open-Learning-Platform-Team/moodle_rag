@@ -1,0 +1,31 @@
+
+
+**AI 201: Foundations of Artificial Intelligence - Midterm Exam**
+
+**Instructions:** Please answer each of the following five questions thoroughly. Aim for responses between 200 and 300 words for each question. Ensure your answers demonstrate a clear understanding of the core concepts discussed in the course.
+
+**Total Time:** 90 minutes
+
+---
+
+**Question 1: Search Algorithms**
+
+Compare and contrast Breadth-First Search (BFS) and Depth-First Search (DFS) as uninformed search strategies. Discuss their respective advantages and disadvantages concerning completeness, optimality (assuming uniform path costs), time complexity (in terms of nodes generated), and space complexity. Provide a specific example scenario where BFS would be clearly preferable to DFS, and another scenario where DFS might be a more suitable choice, justifying your reasoning for each.
+
+**Question 2: Informed Search and Heuristics**
+
+Explain the concept of a heuristic function (h(n)) within the context of informed search algorithms, such as A* search. What role does it play in guiding the search process? Define the properties of admissibility and consistency for a heuristic function. Discuss why admissibility is crucial for guaranteeing optimality in A* search and explain the potential impact (positive and negative) of using a more "informed" (but still admissible) heuristic versus a less informed one on search performance.
+
+**Question 3: Knowledge Representation**
+
+Describe two distinct methods for knowledge representation (KR) commonly used in AI, choosing from options like Semantic Networks, Frames, Production Rules, or Propositional/First-Order Logic. For each chosen method, explain its fundamental structure and how it represents facts, concepts, and relationships. Analyze the primary strengths and weaknesses of each method regarding its expressiveness, ease of inference, modifiability, and computational tractability.
+
+**Question 4: Logic and Inference**
+
+Explain the significance of logical inference for reasoning in Artificial Intelligence systems. Define the concept of logical entailment. Describe the Modus Ponens inference rule, providing its logical form and a clear, simple example of its application. Discuss the difference between a sound and a complete inference procedure. Why are both soundness and completeness considered desirable, yet sometimes conflicting, goals in the design of AI reasoning systems?
+
+**Question 5: Planning**
+
+Define classical planning in the context of AI problem-solving. Describe the core components typically used to formally represent a planning problem, focusing on the elements included in the STRIPS (Stanford Research Institute Problem Solver) representation (e.g., states, actions/operators including preconditions and effects, initial state, goal specification). Briefly explain the fundamental difference between searching in the state space versus searching in the plan space. Mention one major challenge that makes planning computationally difficult.
+
+---
