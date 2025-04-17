@@ -17,11 +17,11 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 # Replace URLs list with file paths and user IDs
 file_data = {
     "Student1.txt": "1",
-    "student2_answers.txt": "2",
-    "student2_bio.txt": "2",
-    "student2_exam.txt": "2",
-    "student2_teacher_response.txt": "2",
-    "student3.txt": "3",
+    "Student2_answers.txt": "2",
+    "Student2_bio.txt": "2",
+    "Student2_exam.txt": "2",
+    "Student2_teacher_response.txt": "2",
+    "Student3.txt": "3",
 }
 
 # Modify loader to use TextLoader and add metadata
