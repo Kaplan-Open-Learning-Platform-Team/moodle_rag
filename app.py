@@ -16,14 +16,12 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # Replace URLs list with file paths and user IDs
 file_data = {
-    "moodle_rag/Student1.txt": "1",
-    
-    "moodle_rag/student2_answers.txt": "2",
-    "moodle_rag/student2_bio.txt": "2",
-    "moodle_rag/student2_exam.txt": "2",
-    "moodle_rag/student2_teacher_response.txt": "2",
-
-    "moodle_rag/student3.txt": "3",
+    "Student1.txt": "1",
+    "student2_answers.txt": "2",
+    "student2_bio.txt": "2",
+    "student2_exam.txt": "2",
+    "student2_teacher_response.txt": "2",
+    "student3.txt": "3",
 }
 
 # Modify loader to use TextLoader and add metadata
@@ -49,13 +47,15 @@ vectorstore = Chroma.from_documents(
 # NO RETRIEVER TOOL NEEDED
 
 # Agent State
-from typing import Annotated, Sequence, TypedDict, List, Dict, Optional, Literal, Union # Added Literal and Union
+from typing import (Annotated, Dict, List, Literal,  # Added Literal and Union
+                    Optional, Sequence, TypedDict, Union)
 
-from langchain_core.messages import BaseMessage
-from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_core.documents import Document
+from langchain_core.messages import BaseMessage
+from langchain_core.pydantic_v1 import Field  # Import Field
+from langchain_core.vectorstores import VectorStoreRetriever
 from langgraph.graph.message import add_messages
-from langchain_core.pydantic_v1 import Field # Import Field
+
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
@@ -72,11 +72,12 @@ from typing import Annotated, Literal, Sequence, TypedDict
 from langchain import hub
 from langchain_core.messages import BaseMessage, HumanMessage
 from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate  # Added line
 from langchain_core.prompts import PromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
-from langchain_core.prompts import ChatPromptTemplate # Added line
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.prebuilt import tools_condition
+
 # NO LONGER NEEDED from langchain.tools.retriever import create_retriever_tool
 
 
